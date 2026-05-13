@@ -9,7 +9,7 @@ use Light2000\Modeler\Support\BinaryDownloader;
 class InstallCommand extends Command
 {
 
-    const VERSION = 'v0.1.0';
+    const VERSION = 'v0.1.1';
 
     const BASE_URL = 'http://laravel-modeler.test.upcdn.net/releases/';
 
