@@ -1,0 +1,29 @@
+{
+  "$schema": "https://getcomposer.org/schema.json",
+  "name": "light2000/laravel-modeler",
+  "description": "Laravel ServiceProvider + Artisan commands for the Modeler Studio / Generator toolchain.",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^12.0|^13.0",
+    "illuminate/console": "^12.0|^13.0",
+    "illuminate/database": "^12.0|^13.0",
+    "symfony/process": "^7.0",
+    "guzzlehttp/guzzle": "^7.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Light2000\\Modeler\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Light2000\\Modeler\\ModelerServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
