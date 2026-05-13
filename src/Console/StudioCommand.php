@@ -20,7 +20,7 @@ class StudioCommand extends Command
         $dataPath = (string) ($setting['DATA_PATH'] ?? '');
         $logPath = (string) ($setting['LOG_PATH'] ?? '');
         $studioPath = (string) ($setting['STUDIO_PATH'] ?? '');
-        $port = (int) ($setting['SERVER_PORT'] ?? 8080);
+        $port = (string) ($setting['STUDIO_SERVER_PORT'] ?? 'auto');
 
         foreach ([$dataPath, $logPath, dirname($studioPath)] as $dir) {
             if ($dir !== '' && ! is_dir($dir)) {
@@ -31,7 +31,7 @@ class StudioCommand extends Command
         $configPath = WritesModelerConfigJson::dump($this->laravel);
         $this->info('Config: ' . $configPath);
 
-        if (PortChecker::isInUse('127.0.0.1', $port)) {
+        if ($port !== 'auto' && PortChecker::isInUse('127.0.0.1', $port)) {
             $this->error("Port {$port} is already in use. Set MODELER_SERVER_PORT in .env or config to a free port.");
 
             return self::FAILURE;
