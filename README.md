@@ -16,7 +16,7 @@ php artisan vendor:publish --tag=modeler-config
 
 ## 命令
 
-- `php artisan modeler:install` — 下载当前平台的 `generator` 与 `studio` 到 `storage/modeler/bin`（可通过 `MODELER_*_PATH` 调整）。
+- `php artisan modeler:install` — 下载当前平台的 `generator` 与 `studio` 到 `/.modeler/bin`目录（可通过 `MODELER_*_PATH` 调整）。
 - `php artisan modeler:studio` — 并以前台方式启动 Studio（Ctrl+C 结束）。
 - `php artisan modeler:generate` — 调用 Generator，使用同上 `config.json`。
 
