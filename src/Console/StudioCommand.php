@@ -20,7 +20,7 @@ class StudioCommand extends Command
         $dataPath = (string) ($setting['DATA_PATH'] ?? '');
         $logPath = (string) ($setting['LOG_PATH'] ?? '');
         $studioPath = (string) ($setting['STUDIO_PATH'] ?? '');
-        $port = (string) ($setting['STUDIO_SERVER_PORT'] ?? 'auto');
+        $port = (string) (!empty($setting['STUDIO_SERVER_PORT']) && is_numeric($setting['STUDIO_SERVER_PORT']) ? $setting['STUDIO_SERVER_PORT'] : 'auto');
 
         foreach ([$dataPath, $logPath, dirname($studioPath)] as $dir) {
             if ($dir !== '' && ! is_dir($dir)) {
