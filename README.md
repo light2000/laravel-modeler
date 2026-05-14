@@ -3,6 +3,24 @@
 > Laravel Modeler 是一个面向 Laravel 项目的本地建模与代码生成工具入口包。
 > 通过 Composer 安装后，可使用 Artisan 命令下载并启动 Modeler Studio / Generator，完成模型设计、关系设计，并生成 Laravel 常用代码。
 
+## 界面预览
+
+以下为 Modeler Studio 界面截图（从左到右为 模型画布 → AI字段推荐 → 代码生成）。
+
+<table>
+<tr>
+<td align="center" valign="top" width="33%">
+<a href="docs/images/1.png" title="查看原图 1"><img src="docs/images/1.thumb.png" alt="Modeler Studio 截图 1"/></a><br/><sub>1</sub>
+</td>
+<td align="center" valign="top" width="33%">
+<a href="docs/images/2.png" title="查看原图 2"><img src="docs/images/2.thumb.png" alt="Modeler Studio 截图 2"/></a><br/><sub>2</sub>
+</td>
+<td align="center" valign="top" width="33%">
+<a href="docs/images/3.png" title="查看原图 3"><img src="docs/images/3.thumb.png" alt="Modeler Studio 截图 3"/></a><br/><sub>3</sub>
+</td>
+</tr>
+</table>
+
 ---
 
 ## 项目定位

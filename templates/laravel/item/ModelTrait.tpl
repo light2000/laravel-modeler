@@ -42,7 +42,7 @@ use {{.Namespace}}\{{.Class}};
 trait _{{$item.Class}}Trait
 {
     {{- if $item.HasFactory}}
-	use HasFactory;
+    use HasFactory;
     {{- end}}
     {{- if $item.SoftDel}}
     use SoftDeletes;
