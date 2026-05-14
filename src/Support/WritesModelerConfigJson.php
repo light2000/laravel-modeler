@@ -21,7 +21,7 @@ class WritesModelerConfigJson
 
         $setting = $app['config']->get('modeler.setting', []);
         $setting['STUDIO_AUTO_OPEN'] = is_bool($setting['STUDIO_AUTO_OPEN']) ? $setting['STUDIO_AUTO_OPEN'] : true;
-        $setting['STUDIO_SERVER_PORT'] = is_string($setting['STUDIO_SERVER_PORT']) ? $setting['STUDIO_SERVER_PORT'] : 'auto';
+        $setting['STUDIO_SERVER_PORT'] = is_numeric($setting['STUDIO_SERVER_PORT']) ? strval($setting['STUDIO_SERVER_PORT']) : 'auto';
         $setting['LLM_CLAUDE_MAX_TOKENS'] = (int) $setting['LLM_CLAUDE_MAX_TOKENS'];
 
         $noStrvalKeys = ['STUDIO_AUTO_OPEN', 'LLM_CLAUDE_MAX_TOKENS', 'STUDIO_SERVER_PORT'];
