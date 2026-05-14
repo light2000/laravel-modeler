@@ -10,13 +10,13 @@
 <table>
 <tr>
 <td align="center" valign="top" width="33%">
-<a href="docs/images/1.png" title="查看原图 1"><img src="docs/images/1.thumb.png" alt="Modeler Studio 截图 1"/></a><br/><sub>1</sub>
+<a href="docs/images/1.png" title="查看原图 1"><img src="docs/images/1.thumb.png" alt="Modeler Studio 截图 1"/></a>
 </td>
 <td align="center" valign="top" width="33%">
-<a href="docs/images/2.png" title="查看原图 2"><img src="docs/images/2.thumb.png" alt="Modeler Studio 截图 2"/></a><br/><sub>2</sub>
+<a href="docs/images/2.png" title="查看原图 2"><img src="docs/images/2.thumb.png" alt="Modeler Studio 截图 2"/></a>
 </td>
 <td align="center" valign="top" width="33%">
-<a href="docs/images/3.png" title="查看原图 3"><img src="docs/images/3.thumb.png" alt="Modeler Studio 截图 3"/></a><br/><sub>3</sub>
+<a href="docs/images/3.png" title="查看原图 3"><img src="docs/images/3.thumb.png" alt="Modeler Studio 截图 3"/></a>
 </td>
 </tr>
 </table>
