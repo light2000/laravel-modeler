@@ -25,6 +25,20 @@ class InstallCommand extends Command
 
     protected $description = 'Download Modeler generator and studio binaries for this platform.';
 
+    protected static  $studioUrls = [
+        'windows-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-windows-amd64.exe',
+        'linux-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-linux-amd64',
+        'darwin-arm64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-darwin-arm64',
+        'darwin-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-darwin-amd64',
+    ];
+
+    protected static $generatorUrls = [
+        'windows-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-windows-amd64.exe',
+        'linux-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-linux-amd64',
+        'darwin-arm64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-darwin-arm64',
+        'darwin-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-darwin-amd64',
+    ];
+
     protected static $fallbackStudioUrls = [
         'windows-amd64' => self::FALLBACK_STUDIO_BASE_URL . self::STUDIO_VERSION . '/studio-windows-amd64.exe',
         'linux-amd64' => self::FALLBACK_STUDIO_BASE_URL . self::STUDIO_VERSION . '/studio-linux-amd64',
@@ -39,19 +53,7 @@ class InstallCommand extends Command
         'darwin-amd64' => self::FALLBACK_GENERATOR_BASE_URL .  self::GENERATOR_VERSION . '/generator-darwin-amd64',
     ];
 
-    protected static  $studioUrls = [
-        'windows-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-windows-amd64.exe',
-        'linux-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-linux-amd64',
-        'darwin-arm64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-darwin-arm64',
-        'darwin-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-darwin-amd64',
-    ];
 
-    protected static $generatorUrls = [
-        'windows-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-windows-amd64.exe',
-        'linux-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-linux-amd64',
-        'darwin-arm64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-darwin-arm64',
-        'darwin-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-darwin-amd64',
-    ];
 
     public function handle(BinaryDownloader $downloader): int
     {
