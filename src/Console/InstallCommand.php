@@ -8,29 +8,49 @@ use Light2000\Modeler\Support\BinaryDownloader;
 
 class InstallCommand extends Command
 {
-    const GENERATOR_VERSION = 'v0.1.2';
+    const GENERATOR_VERSION = 'v0.0.1';
 
-    const STUDIO_VERSION = 'v0.1.2';
+    const STUDIO_VERSION = 'v0.0.1';
 
-    const BASE_URL = 'http://laravel-modeler.test.upcdn.net/releases/';
+    const GENERATOR_URL = 'https://gitee.com/light2000/laravel-modeler-generator/releases/download/';
+
+    const STUDIO_URL = 'https://gitee.com/light2000/laravel-modeler-studio/releases/download/';
+
+    const FALLBACK_GENERATOR_BASE_URL = 'https://github.com/light2000/laravel-modeler-generator/releases/download/';
+
+    const FALLBACK_STUDIO_BASE_URL = 'https://github.com/light2000/laravel-modeler-studio/releases/download/';
 
     protected $signature = 'modeler:install
                             {--force : Overwrite existing binaries}';
 
     protected $description = 'Download Modeler generator and studio binaries for this platform.';
 
-    protected static $studioUrls = [
-        'windows-amd64' => self::BASE_URL . 'studio/' . self::STUDIO_VERSION . '/studio-windows-amd64.exe',
-        'linux-amd64' => self::BASE_URL . 'studio/' . self::STUDIO_VERSION . '/studio-linux-amd64',
-        'darwin-arm64' => self::BASE_URL . 'studio/' . self::STUDIO_VERSION . '/studio-darwin-arm64',
-        'darwin-amd64' => self::BASE_URL . 'studio/' . self::STUDIO_VERSION . '/studio-darwin-amd64',
+    protected static $fallbackStudioUrls = [
+        'windows-amd64' => self::FALLBACK_STUDIO_BASE_URL . self::STUDIO_VERSION . '/studio-windows-amd64.exe',
+        'linux-amd64' => self::FALLBACK_STUDIO_BASE_URL . self::STUDIO_VERSION . '/studio-linux-amd64',
+        'darwin-arm64' => self::FALLBACK_STUDIO_BASE_URL . self::STUDIO_VERSION . '/studio-darwin-arm64',
+        'darwin-amd64' => self::FALLBACK_STUDIO_BASE_URL . self::STUDIO_VERSION . '/studio-darwin-amd64',
+    ];
+
+    protected static  $fallbackGeneratorUrls = [
+        'windows-amd64' => self::FALLBACK_GENERATOR_BASE_URL .  self::GENERATOR_VERSION . '/generator-windows-amd64.exe',
+        'linux-amd64' => self::FALLBACK_GENERATOR_BASE_URL .  self::GENERATOR_VERSION . '/generator-linux-amd64',
+        'darwin-arm64' => self::FALLBACK_GENERATOR_BASE_URL .  self::GENERATOR_VERSION . '/generator-darwin-arm64',
+        'darwin-amd64' => self::FALLBACK_GENERATOR_BASE_URL .  self::GENERATOR_VERSION . '/generator-darwin-amd64',
+    ];
+
+    protected static  $studioUrls = [
+        'windows-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-windows-amd64.exe',
+        'linux-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-linux-amd64',
+        'darwin-arm64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-darwin-arm64',
+        'darwin-amd64' => self::STUDIO_URL . self::STUDIO_VERSION . '/studio-darwin-amd64',
     ];
 
     protected static $generatorUrls = [
-        'windows-amd64' => self::BASE_URL . 'generator/' . self::GENERATOR_VERSION . '/generator-windows-amd64.exe',
-        'linux-amd64' => self::BASE_URL . 'generator/' . self::GENERATOR_VERSION . '/generator-linux-amd64',
-        'darwin-arm64' => self::BASE_URL . 'generator/' . self::GENERATOR_VERSION . '/generator-darwin-arm64',
-        'darwin-amd64' => self::BASE_URL . 'generator/' . self::GENERATOR_VERSION . '/generator-darwin-amd64',
+        'windows-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-windows-amd64.exe',
+        'linux-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-linux-amd64',
+        'darwin-arm64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-darwin-arm64',
+        'darwin-amd64' => self::GENERATOR_URL . self::GENERATOR_VERSION . '/generator-darwin-amd64',
     ];
 
     public function handle(BinaryDownloader $downloader): int
@@ -47,7 +67,12 @@ class InstallCommand extends Command
 
         try {
             $platformKey = $this->resolvePlatformKey();
-            if (! isset(self::$generatorUrls[$platformKey], self::$studioUrls[$platformKey])) {
+            if (! isset(
+                self::$generatorUrls[$platformKey],
+                self::$studioUrls[$platformKey],
+                self::$fallbackGeneratorUrls[$platformKey],
+                self::$fallbackStudioUrls[$platformKey]
+            )) {
                 throw new \RuntimeException(sprintf(
                     'No download URLs for platform "%s" (PHP_OS_FAMILY=%s, php_uname("m")=%s). Supported: %s.',
                     $platformKey,
@@ -58,6 +83,8 @@ class InstallCommand extends Command
             }
             $generatorUrl = self::$generatorUrls[$platformKey];
             $studioUrl = self::$studioUrls[$platformKey];
+            $generatorFallbackUrl = self::$fallbackGeneratorUrls[$platformKey];
+            $studioFallbackUrl = self::$fallbackStudioUrls[$platformKey];
         } catch (\Throwable $e) {
             $this->error($e->getMessage());
 
@@ -65,10 +92,15 @@ class InstallCommand extends Command
         }
 
         $this->info('Downloading generator…');
-        try {
-            $downloader->download($generatorUrl, $generatorPath, $force);
-        } catch (\Throwable $e) {
-            $this->error($e->getMessage());
+        if (! $this->downloadBinaryWithFallback(
+            $downloader,
+            $generatorUrl,
+            $generatorFallbackUrl,
+            $generatorPath,
+            $force,
+            'generator'
+        )) {
+            $this->printManualDownloadInstructions($platformKey, $generatorPath, $studioPath);
 
             return self::FAILURE;
         }
@@ -76,10 +108,15 @@ class InstallCommand extends Command
         $this->ensureGitignoreIgnoresBinary($files, $generatorPath);
 
         $this->info('Downloading studio…');
-        try {
-            $downloader->download($studioUrl, $studioPath, $force);
-        } catch (\Throwable $e) {
-            $this->error($e->getMessage());
+        if (! $this->downloadBinaryWithFallback(
+            $downloader,
+            $studioUrl,
+            $studioFallbackUrl,
+            $studioPath,
+            $force,
+            'studio'
+        )) {
+            $this->printManualDownloadInstructions($platformKey, $generatorPath, $studioPath);
 
             return self::FAILURE;
         }
@@ -116,6 +153,60 @@ class InstallCommand extends Command
         $this->info('Done.');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * 先使用主镜像 URL 下载，失败则改用备用 URL。
+     *
+     * @return bool 成功返回 true；主镜像与备用均失败返回 false
+     */
+    private function downloadBinaryWithFallback(
+        BinaryDownloader $downloader,
+        string $primaryUrl,
+        string $fallbackUrl,
+        string $destinationPath,
+        bool $force,
+        string $label
+    ): bool {
+        try {
+            $downloader->download($primaryUrl, $destinationPath, $force, false);
+
+            return true;
+        } catch (\Throwable $e) {
+            $this->warn(sprintf('「%s」主镜像下载失败：%s', $label, $e->getMessage()));
+        }
+
+        try {
+            $this->line(sprintf('正在从备用地址重试下载「%s」…', $label));
+            $downloader->download($fallbackUrl, $destinationPath, $force, false);
+
+            return true;
+        } catch (\Throwable $e) {
+            $this->error(sprintf('「%s」备用镜像下载失败：%s', $label, $e->getMessage()));
+
+            return false;
+        }
+    }
+
+    /**
+     * 主镜像与备用镜像均失败后，输出备用链接并提示手动安装。
+     */
+    private function printManualDownloadInstructions(
+        string $platformKey,
+        string $generatorPath,
+        string $studioPath
+    ): void {
+        $generatorFallbackUrl = self::$fallbackGeneratorUrls[$platformKey];
+        $studioFallbackUrl = self::$fallbackStudioUrls[$platformKey];
+
+        $this->error('主镜像与备用镜像均无法完成下载，请手动下载并安装：');
+        $this->line('  Generator（备用链接）：' . $generatorFallbackUrl);
+        $this->line('  Studio（备用链接）：' . $studioFallbackUrl);
+        $this->newLine();
+        $this->line('请将 generator 可执行文件保存到：' . $generatorPath);
+        $this->line('请将 studio 可执行文件保存到：' . $studioPath);
+        $this->newLine();
+        $this->comment('保存后若为 Linux/macOS，请为该二进制添加执行权限（例如 chmod +x）。');
     }
 
     private function ensureDirectory(Filesystem $files, string $path): void

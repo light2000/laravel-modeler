@@ -10,7 +10,10 @@ class BinaryDownloader
         protected Client $client
     ) {}
 
-    public function download(string $url, string $destinationPath, bool $force): void
+    /**
+     * @param  bool  $verifySsl  为 false 时跳过 TLS 证书校验（仅建议在备用镜像等受信场景使用）
+     */
+    public function download(string $url, string $destinationPath, bool $force, bool $verifySsl = true): void
     {
         $dir = dirname($destinationPath);
         if (! is_dir($dir)) {
@@ -21,10 +24,15 @@ class BinaryDownloader
             return;
         }
 
-        $response = $this->client->get($url, [
+        $options = [
             'sink' => $destinationPath,
             'http_errors' => false,
-        ]);
+        ];
+        if (! $verifySsl) {
+            $options['verify'] = false;
+        }
+
+        $response = $this->client->get($url, $options);
 
         if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
             @unlink($destinationPath);
