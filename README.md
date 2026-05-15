@@ -146,14 +146,21 @@ php artisan modeler:studio
 
 Laravel Modeler 会读取 `config/modeler.php` 或内部默认配置。常用配置项包括：
 
+也可以通过 `php artisan vendor:publish --tag=modeler-config` 命令将原始config发布到your-laravel-project/config中
+
 ```php
 return [
     'setting' => [
-        'STUDIO_PATH' => env('MODELER_STUDIO_PATH', base_path('.modeler/bin/studio')),
-        'GENERATOR_PATH' => env('MODELER_GENERATOR_PATH', base_path('.modeler/bin/generator')),
-        'PROJECT_NAME' => env('MODELER_PROJECT_NAME', env('APP_NAME', 'Laravel')),
-        'PROJECT_DIR' => env('MODELER_PROJECT_DIR', base_path()),
-        'SERVER_PORT' => env('MODELER_SERVER_PORT', 'auto'),
+        'TRANS_API_KEY' => env('MODELER_TRANS_API_KEY', ''), //百度翻译APP ID，阿里云 AccessKey ID，腾讯云 SecretId
+        'TRANS_API_SECRET' => env('MODELER_TRANS_API_SECRET', ''), //百度翻译密钥，阿里云 AccessKey Secret，腾讯云 SecretKey
+        'TRANS_PROVIDER' => env('MODELER_TRANS_PROVIDER', ''), //翻译API服务提供商，可选项：BAIDU,ALIYUN,TENCENT
+        'TRANS_PROXY' => env('MODELER_TRANS_PROXY', ''), //请求翻译API时的HTTP代理地址，不使用请留空
+        'LLM_PROVIDER' => env('MODELER_LLM_PROVIDER', ''), //大模型提供商：可选项：DEEPSEEK,DOUBAO,QWEN,GLM,OPENAI,CLAUDE
+        'LLM_API_KEY' => env('MODELER_LLM_API_KEY', ''), //大模型API KEY
+        'LLM_PROXY' => env('MODELER_LLM_PROXY', ''), //请求大模型API时的HTTP代理地址，不使用请留空
+        'PRO_SN' => env('MODELER_PRO_SN', ''), //laravel modeler PRO版本的SN
+        'STUDIO_SERVER_PORT' => env('MODELER_STUDIO_SERVER_PORT', "auto"), //laravel modeler studio HTTP访问端口
+        'STUDIO_AUTO_OPEN' =>  env('MODELER_STUDIO_AUTO_OPEN', true), //studio启动时是否自动打开浏览器
     ],
 ];
 ```
@@ -161,11 +168,16 @@ return [
 可在 `.env` 中覆盖：
 
 ```dotenv
-MODELER_STUDIO_PATH=/path/to/studio
-MODELER_GENERATOR_PATH=/path/to/generator
-MODELER_PROJECT_NAME="My Laravel App"
-MODELER_PROJECT_DIR=/path/to/project
-MODELER_SERVER_PORT=8080
+MODELER_TRANS_API_KEY=...
+MODELER_TRANS_API_SECRET=...
+MODELER_TRANS_PROVIDER=BAIDU
+MODELER_TRANS_PROXY=
+MODELER_LLM_PROVIDER=DEEPSEEK
+MODELER_LLM_API_KEY=...
+MODELER_LLM_PROXY=
+MODELER_PRO_SN=...
+MODELER_STUDIO_SERVER_PORT=8080
+MODELER_STUDIO_AUTO_OPEN=false
 ```
 
 ---
