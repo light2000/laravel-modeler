@@ -135,6 +135,7 @@ NONE, NORMAL, UNIQUE
      - label 使用中文
      - 至少 2 个值
      - value 不重复
+     - label 枚举值不能是"已删除"
 
 6. 如果无法高置信度判断复用哪个枚举：
    - 使用 create
