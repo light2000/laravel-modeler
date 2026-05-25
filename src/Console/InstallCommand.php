@@ -8,9 +8,9 @@ use Light2000\Modeler\Support\BinaryDownloader;
 
 class InstallCommand extends Command
 {
-    const GENERATOR_VERSION = 'v0.0.2';
+    const GENERATOR_VERSION = 'v0.0.3';
 
-    const STUDIO_VERSION = 'v0.0.3';
+    const STUDIO_VERSION = 'v0.0.4';
 
     const GENERATOR_URL = 'https://gitee.com/light2000/laravel-modeler-generator/releases/download/';
 

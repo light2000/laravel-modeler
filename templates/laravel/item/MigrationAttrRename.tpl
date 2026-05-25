@@ -19,21 +19,14 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('{{$item.Table}}', function (Blueprint $table) {
-            {{if .Rename}}
             $table->renameColumn('{{$oldAttribute.Snake}}', '{{$newAttribute.Snake}}');
-            {{end}}
-            {{$newAttribute.PhpMigrationToChange}}
         });
     }
 
     public function down()
     {
         Schema::table('{{$item.Table}}', function (Blueprint $table) {
-            {{if .Rename}}
             $table->renameColumn('{{$newAttribute.Snake}}', '{{$oldAttribute.Snake}}');
-            {{end}}
-            {{$oldAttribute.PhpMigrationToChange}}
         });
     }
 };
-
