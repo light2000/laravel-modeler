@@ -99,7 +99,7 @@ NONE, NORMAL, UNIQUE
 
 8. relation.name 和 relation.inverse_name 必须使用 snake_case，且不能超过30个字符。
 
-9. target_model 必须优先从提供的 model candidates 中选择：
+9. target_model 必须从提供的 model candidates 中选择：
    - 如果能匹配已有模型，matched_from_candidates 设为 true。
    - 如果无法匹配，target_model 设为空字符串，matched_from_candidates 设为 false，并将 requires_user_confirmation 设为 true。
    - 不要臆造不存在的模型名称。

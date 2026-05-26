@@ -19,6 +19,7 @@ use Illuminate\Database\Seeder;
 use {{$relationItem.ModelNamespace}}\{{$relationItem.Class}};
 {{- end}}
 {{- end}}
+use Illuminate\Support\Facades\Log;
 
 class {{$item.Class}}RelationSeeder extends Seeder
 {
@@ -33,9 +34,13 @@ class {{$item.Class}}RelationSeeder extends Seeder
         ${{$relation.TargetItem.Vars}}Ids = collect({{$relation.TargetItem.Class}}::pluck('id'))->shuffle()->toArray();
         ${{$relation.TargetItem.Var}}Count = count(${{$relation.TargetItem.Vars}}Ids);
         ${{$item.Vars}}->each(function (${{$item.Var}}, $index) use (${{$relation.TargetItem.Vars}}Ids, ${{$relation.TargetItem.Var}}Count) {
-            ${{$item.Var}}->update([
-                '{{$relation.Attribute.Snake}}' => ${{$relation.TargetItem.Vars}}Ids[$index%${{$relation.TargetItem.Var}}Count],
-            ]);
+            try {
+                ${{$item.Var}}->update([
+                    '{{$relation.Attribute.Snake}}' => ${{$relation.TargetItem.Vars}}Ids[$index%${{$relation.TargetItem.Var}}Count],
+                ]);
+            } catch (\Exception $e) {
+                Log::info("update {{$item.Snake}} {{$relation.Attribute.Snake}} failed: " . $e->getMessage());
+            }
         });
             {{- end}}
 
@@ -69,8 +74,12 @@ class {{$item.Class}}RelationSeeder extends Seeder
         foreach (${{$item.Vars}} as $index => ${{$item.Var}}) {
             {{- range $k, $targetItem := $relation.RightItems}}
             if ($index % {{len $relation.RightItems}} == {{$k}}) {
-                ${{$item.Var}}->{{$relation.Method}}()->associate(${{$targetItem.Vars}}[($indexes['{{$targetItem.MorphMapKey}}']++) % count(${{$targetItem.Vars}})]);
-                ${{$item.Var}}->save();
+                try {
+                    ${{$item.Var}}->{{$relation.Method}}()->associate(${{$targetItem.Vars}}[($indexes['{{$targetItem.MorphMapKey}}']++) % count(${{$targetItem.Vars}})]);
+                    ${{$item.Var}}->save();
+                } catch (\Exception $e) {
+                    Log::info("update {{$item.Snake}} {{$relation.Method}} associate failed: " . $e->getMessage());
+                }
                 continue;
             }
             {{- end}}
